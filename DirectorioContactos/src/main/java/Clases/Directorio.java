@@ -76,13 +76,6 @@ public String mostrarArbol(Directorio listaContacto) {
     if (listaContacto != null && listaContacto.contactoRaiz != null) {
         // Recorre el árbol binario en orden (inorden)
         resultado.append(recorrerArbol(listaContacto.contactoRaiz));
-    } else {
-        // Si el árbol está vacío, muestra un mensaje indicando que no se encontraron contactos
-        resultado.append("<div class='col-12'>");
-        resultado.append("<div class='alert alert-info' role='alert'>");
-        resultado.append("No se encontraron contactos registrados.");
-        resultado.append("</div>");
-        resultado.append("</div>");
     }
     return resultado.toString();
 }
@@ -101,9 +94,9 @@ private String recorrerArbol(Contacto raiz) {
          resultado.append("<td>" + raiz.getCelular() + "</td>");
          resultado.append("<td>" + raiz.getDireccion() + "</td>");
          resultado.append("<td>" + raiz.getEmail() + "</td>");
-         resultado.append("<td><a href='#' type='button' class='btn btn-outline-success' data-bs-toggle='modal' data-bs-target='#visualizar' data-nombre=" + raiz.getId() + "<i class='fa fa-eye'></i></a>");
+         resultado.append("<td><a href='#' type='button' class='btn btn-outline-primary' data-bs-toggle='modal' data-bs-target='#visualizar' data-nombre=" + raiz.getId() + "><i class='fa-solid fa-eye'></i></a>");
          resultado.append("<a href='#' type='button' class='btn btn-outline-success' data-bs-toggle='modal' data-bs-target='#editar' data-nombre=" + raiz.getId() + "><i class='fa-solid fa-pen-clip'></i></a>");
-         resultado.append("<a href='#' type='button' class='btn btn-outline-success' data-bs-toggle='modal' data-bs-target='#eliminar' data-nombre=" + raiz.getId() + "><i class='fa-solid fa-trash'</i></a></td>");
+         resultado.append("<a href='#' type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#eliminar' data-nombre=" + raiz.getId() + "><i class='fa-solid fa-trash'</i></a></td>");
 
          resultado.append("</tr>");
 

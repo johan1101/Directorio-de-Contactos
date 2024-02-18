@@ -70,4 +70,12 @@
     font-weight: 600;
 }
 
+.btn {
+   margin: 0px 2px;
+}
+
+.btn .fa-solid{
+    background-color: #fffff;
+}
+
 
