@@ -1,2 +1,7 @@
+Clases\Contacto.class
+Servlets\SvAgregarContacto.class
+Clases\Directorio.class
 com\mundo\directoriocontactos\resources\JavaEE8Resource.class
+Clases\ContactoRepetidoException.class
+Clases\Serializacion.class
 com\mundo\directoriocontactos\JAXRSConfiguration.class
