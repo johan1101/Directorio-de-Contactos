@@ -73,7 +73,7 @@ public class SvAgregarContacto extends HttpServlet {
         datos = listaContactos.Visualizar(listaContactos, Integer.parseInt(id));
         
          response.setContentType("text/html");
-            response.getWriter().write(datos);
+         response.getWriter().write(datos);
     }
 
     /**

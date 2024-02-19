@@ -120,7 +120,7 @@ public class Directorio implements Serializable {
         StringBuilder resultado = new StringBuilder();
         if (raiz != null) {
             // Recorre el subárbol izquierdo
-            resultado.append(recorrerArbol(raiz.getIzq()));
+            resultado.append(recorrerArbolVisualizar(raiz.getIzq(), id));
 
             // Agrega los detalles del contacto actual
             if (raiz.getId() == id) {
@@ -173,10 +173,11 @@ public class Directorio implements Serializable {
                 resultado.append("</div>");
                 resultado.append("</div>");
                 resultado.append("</div>");
+
             }
 
             // Recorre el subárbol derecho
-            resultado.append(recorrerArbol(raiz.getDer()));
+            resultado.append(recorrerArbolVisualizar(raiz.getDer(), id)); 
         }
         return resultado.toString();
     }
