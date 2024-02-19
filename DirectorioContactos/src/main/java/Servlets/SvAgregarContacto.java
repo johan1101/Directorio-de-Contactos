@@ -53,6 +53,27 @@ public class SvAgregarContacto extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        System.out.println("Corriendo metodo para visualizar contacto");
+        
+        String id = request.getParameter("codigo");
+        
+        System.out.println(id);
+        
+                // Obtener el contexto del servlet
+        ServletContext context = getServletContext();
+        
+        try {
+            listaContactos = Serializacion.leerArchivoContactos(context);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SvAgregarContacto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        String datos;
+        
+        datos = listaContactos.Visualizar(listaContactos, Integer.parseInt(id));
+        
+         response.setContentType("text/html");
+            response.getWriter().write(datos);
     }
 
     /**
@@ -87,12 +108,6 @@ public class SvAgregarContacto extends HttpServlet {
         String celular = request.getParameter("celular");
         String direccion = request.getParameter("direccion");
         String email = request.getParameter("correo");
-
-        System.out.println(nombre);
-        System.out.println(apellido);
-        System.out.println(celular);
-        System.out.println(direccion);
-        System.out.println(email);
 
         int longitud = listaContactos.darPeso();
 

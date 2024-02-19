@@ -78,4 +78,19 @@
     background-color: #fffff;
 }
 
+.custom-modal-size {
+    max-width: 60%; /* Ajusta el porcentaje según tus necesidades */
+}
+
+.titu{
+    font-size: 18px !important;
+    color: #808080 !important;
+    margin-bottom: 15px;
+}
+
+.dato{
+    font-size: 30px;
+    color: #000 !important;
+}
+
 

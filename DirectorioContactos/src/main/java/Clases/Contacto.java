@@ -63,7 +63,7 @@ public class Contacto implements Comparable, Serializable {
      * @param laDireccion direcci�n de contacto
      * @param elCelular celular del contacto
      */
-    public Contacto(int id, String nombre, String apellido, String email, String direccion, String celular, Contacto izq, Contacto der) {
+    public Contacto(int id, String nombre, String apellido, String celular, String direccion, String email, Contacto izq, Contacto der) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;

@@ -142,15 +142,15 @@
                                         <th>Id</th>
                                         <th>Nombres</th>
                                         <th>Apellidos</th>
-                                        <th>Dirección</th>
                                         <th>Telefono</th>
+                                        <th>Dirección</th>
                                         <th>Correo</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
-                    <tbody>             
-                        <%= tablaHTML%>
-                    </tbody>
+                                <tbody>             
+                                    <%= tablaHTML%>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -182,55 +182,56 @@
 </a>
 
 <form action="SvAgregarContacto" method="POST">
-<div class="modal fade" id="registrar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="registrarLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="popup">
-                <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
-                <div class="form">
-                    <h2>Agregar contacto</h2>
-                    <hr>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-element">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" id="nombre" name="nombre" placeholder="Ingresa el nombre" maxlength="40" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="No se permiten números">
+    <div class="modal fade" id="registrar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="registrarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-size">
+            <div class="modal-content">
+                <div class="popup">
+                    <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
+                    <div class="form">
+                        <h2>Agregar contacto</h2>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-element">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" id="nombre" name="nombre" placeholder="Ingresa el nombre" maxlength="20" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="No se permiten números">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-element">
+                                    <label for="apellido">Apellido</label>
+                                    <input type="text" id="apellido" name="apellido" placeholder="Ingresa el apellido" maxlength="20" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="No se permiten números">
+                                </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="form-element">
-                                <label for="apellido">Apellido</label>
-                                <input type="text" id="apellido" name="apellido" placeholder="Ingresa el apellido" maxlength="40" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="No se permiten números">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-element">
+                                    <label for="celular">Celular</label>
+                                    <input type="text" id="celular" name="celular" placeholder="Ingresa su número celular" maxlength="10" required pattern="[0-9]+" title="Solo se permiten números">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-element">
+                                    <label for="direccion">Dirección</label>
+                                    <input type="text" id="direccion" name="direccion" placeholder="Ingresa su dirección" maxlength="40" required>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-element">
-                                <label for="celular">Celular</label>
-                                <input type="text" id="celular" name="celular" placeholder="Ingresa su número celular" maxlength="10" required pattern="[0-9]+" title="Solo se permiten números">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-element">
-                                <label for="direccion">Dirección</label>
-                                <input type="text" id="direccion" name="direccion" placeholder="Ingresa su dirección" maxlength="40" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-element">
-                                <label for="correo">Correo electrónico</label>
-                                <input type="email" id="correo" name="correo" placeholder="Ingresa el correo electrónico" maxlength="40" required>
-                            </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-element">
+                                    <label for="correo">Correo electrónico</label>
+                                    <input type="email" id="correo" name="correo" placeholder="Ingresa el correo electrónico" maxlength="40" required>
+                                </div>
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-element">
-                                <button type="submit">Registrar</button>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-element">
+                                    <button type="submit">Registrar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -238,9 +239,25 @@
             </div>
         </div>
     </div>
-</div>
 </form>
-    
+
+
+<div class="modal fade" id="visualizar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="visualizarLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered custom-modal-size">
+        <div class="modal-content">
+            <div class="popup">
+                <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
+                <div class="form">
+                    <div id="user-details">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -258,6 +275,25 @@
 <!-- Page level custom scripts -->
 <script src="js/demo/datatables-demo.js"></script>
 
+<script>
+    function visualizar(codigo) {
+        var id = codigo;
+        $('#visualizar').modal('show');
+
+        $.ajax({
+            url: 'SvAgregarContacto?codigo=' + id,
+            method: 'GET', // Utiliza POST u otro método HTTP según corresponda
+            success: function (data) {
+                $('#user-details').html(data);
+            },
+            error: function () {
+                // En caso de error en la solicitud:
+                // Registra un mensaje de error en la consola (para fines de depuración)
+                console.log('Error al realizar la ordenación alfabética.');
+            }
+        });
+    }
+</script>
 
 <!-- Inclución de la plantilla de footer -->
 <%@include file= "templates/footer.jsp" %>
