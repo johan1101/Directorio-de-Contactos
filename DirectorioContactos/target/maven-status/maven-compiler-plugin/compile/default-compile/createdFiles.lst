@@ -3,5 +3,6 @@ Servlets\SvAgregarContacto.class
 Clases\Directorio.class
 com\mundo\directoriocontactos\resources\JavaEE8Resource.class
 Clases\ContactoRepetidoException.class
+Servlets\SvEliminar.class
 Clases\Serializacion.class
 com\mundo\directoriocontactos\JAXRSConfiguration.class

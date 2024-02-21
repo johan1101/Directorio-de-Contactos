@@ -5,7 +5,9 @@
 package Clases;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  *
@@ -166,33 +168,25 @@ public class Contacto implements Comparable, Serializable {
         return izq == null && der == null;
     }
     
-    /**
-     * Inserta un nuevo contacto al �rbol que comienza en este nodo.
-     * @param nuevo el el nuevo contacto que se va a insertar - nuevo != null
-     * @throws ContactoRepetidoException se lanza esta excepci�n si el contacto que se quiere agregar ya est� en el directorio
-     */
-    public void insertar( Contacto nuevo ) throws ContactoRepetidoException
-    {
-        if( compareTo( nuevo ) == 0 )
-            throw new ContactoRepetidoException( nuevo.nombre );
-
-        if( compareTo( nuevo ) > 0 )
-        {
-            // Debe agregar el nuevo contacto por el sub�rbol izquierdo
-            if( izq == null )
-                izq = nuevo;
-            else
-                izq.insertar( nuevo );
+public void insertar(Contacto nuevo) throws ContactoRepetidoException {
+    if (compareTo(nuevo) == 0) {
+        throw new ContactoRepetidoException(nuevo.nombre);
+    } else if (compareTo(nuevo) > 0) {
+        // Agregar el nuevo contacto en el subárbol izquierdo
+        if (izq == null) {
+            izq = nuevo;
+        } else {
+            izq.insertar(nuevo);
         }
-        else
-        {
-            // Debe agregar el nuevo contacto por el sub�rbol derecho
-            if( der == null )
-                der = nuevo;
-            else
-                der.insertar( nuevo );
+    } else {
+        // Agregar el nuevo contacto en el subárbol derecho
+        if (der == null) {
+            der = nuevo;
+        } else {
+            der.insertar(nuevo);
         }
     }
+}
     
         /**
      * Retorna el n�mero de contactos que hay en el �rbol que comienza en este nodo utilizando un algoritmo iterativo
@@ -244,4 +238,68 @@ public class Contacto implements Comparable, Serializable {
         int p2 = ( der == null ) ? 0 : der.darPeso( );
         return 1 + p1 + p2;
     }
+        
+        /**
+     * Retorna el contacto que alfab�ticamente corresponde al menor contacto del �rbol que parte de este nodo
+     * @return contacto con menor nombre
+     */
+    public Contacto darMenor( )
+    {
+        return ( izq == null ) ? this : izq.darMenor( );
+    }
+    
+        /**
+     * Retorna el contacto que alfab�ticamente corresponde al mayor contacto del �rbol que parte de este nodo
+     * @return contacto con mayor nombre
+     */
+    public Contacto darMayor( )
+    {
+        return ( der == null ) ? this : der.darMayor( );
+    }
+    
+public Contacto eliminar(String unNombre) {
+    Collator collator = Collator.getInstance(new Locale("es", "ES"));
+
+    // Compara los nombres de manera sensible a la localización
+
+    // Elimina los símbolos y las tildes
+    nombre = nombre.replaceAll("[^\\p{ASCII}]", "");
+
+    int comparacion = collator.compare(nombre, unNombre);
+
+    if (comparacion == 0) {
+        // Si la raíz coincide con el nombre a eliminar
+        if (izq == null) {
+            // Si el hijo izquierdo es nulo, devuelve el hijo derecho como nueva raíz
+            return der;
+        } else if (der == null) {
+            // Si el hijo derecho es nulo, devuelve el hijo izquierdo como nueva raíz
+            return izq;
+        } else {
+            // Si la raíz tiene ambos hijos, encuentra el sucesor en el subárbol derecho
+            Contacto sucesor = der.darMenor();
+            // Actualiza los datos de la raíz con los del sucesor
+            nombre = sucesor.getNombre();
+            apellido = sucesor.getApellido();
+            celular = sucesor.getCelular();
+            direccion = sucesor.getDireccion();
+            email = sucesor.getEmail();
+            // Elimina el sucesor del subárbol derecho
+            der = der.eliminar(sucesor.getNombre());
+            return this;
+        }
+    } else if (comparacion > 0) {
+        // Si el nombre a eliminar es menor que el nombre de la raíz, busca en el subárbol izquierdo
+        if (izq != null) {
+            izq = izq.eliminar(unNombre);
+        }
+    } else {
+        // Si el nombre a eliminar es mayor que el nombre de la raíz, busca en el subárbol derecho
+        if (der != null) {
+            der = der.eliminar(unNombre);
+        }
+    }
+    return this;
+}
+    
 }

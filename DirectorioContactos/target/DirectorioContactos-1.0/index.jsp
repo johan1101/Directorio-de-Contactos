@@ -18,7 +18,7 @@
     listaContactos = Serializacion.leerArchivoContactos(context);
 
     //Generamos la tabla
-    String tablaHTML = listaContactos.mostrarArbol(listaContactos);
+    String tablaHTML = listaContactos.mostrarArbol(listaContactos, context);
 
 %>
 
@@ -243,13 +243,32 @@
 
 
 <div class="modal fade" id="visualizar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="visualizarLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered custom-modal-size">
+    <div class="modal-dialog modal-dialog-centered custom-modal-size">
         <div class="modal-content">
             <div class="popup">
                 <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
                 <div class="form">
                     <div id="user-details">
 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="eliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="popup">
+                <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
+                <div class="form">
+                    <div id="user-details">
+                    <h2>¿Seguro que quieres eliminar este contacto?</h2>
+                    <div class="form-element" style="display: flex; justify-content: space-between;">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right: 10px;">Cancelar</button>
+                        <button type="button" class="btn btn-danger" style="margin-left: 10px;" onclick="eliminar()">Eliminar</button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -293,6 +312,35 @@
             }
         });
     }
+
+var nombreEliminar;
+
+    function modalEliminar(id) {
+        $('#eliminar').modal('show');
+
+nombreEliminar = id;
+
+    }
+
+        function eliminar() {
+        $('#eliminar').modal('hide');
+        var idEliminado = nombreEliminar;
+        $.ajax({
+            url: 'SvEliminar?id=' + idEliminado,
+            method: 'POST', // Utiliza POST u otro método HTTP según corresponda
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+                // En caso de error en la solicitud:
+                // Registra un mensaje de error en la consola (para fines de depuración)
+                console.log('Error al realizar la ordenación alfabética.');
+            }
+        });
+    }
+    
+ 
+     
 </script>
 
 <!-- Inclución de la plantilla de footer -->
