@@ -6,3 +6,4 @@ Clases\ContactoRepetidoException.class
 Servlets\SvEliminar.class
 Clases\Serializacion.class
 com\mundo\directoriocontactos\JAXRSConfiguration.class
+Servlets\SvEditar.class

@@ -39,18 +39,16 @@ public class Directorio implements Serializable {
     // -----------------------------------------------------------------
     // M�todos
     // -----------------------------------------------------------------
-    
     public void agregarContacto(int id, String nombre, String apellido, String celular, String direccion, String email) throws ContactoRepetidoException {
-    Contacto nuevoContacto = new Contacto(id, nombre, apellido, celular, direccion, email, null, null);
-    if (contactoRaiz == null) {
-        contactoRaiz = nuevoContacto;
-    } else {
-       contactoRaiz.insertar(nuevoContacto);
+        Contacto nuevoContacto = new Contacto(id, nombre, apellido, celular, direccion, email, null, null);
+        if (contactoRaiz == null) {
+            contactoRaiz = nuevoContacto;
+        } else {
+            contactoRaiz.insertar(nuevoContacto);
+        }
+        numContactos++;
     }
-    numContactos++;
-}
-    
-    
+
     /**
      * Retorna el n�mero de contactos que est�n en el directorio
      *
@@ -84,8 +82,8 @@ public class Directorio implements Serializable {
             resultado.append("<td>" + raiz.getDireccion() + "</td>");
             resultado.append("<td>" + raiz.getEmail() + "</td>");
             resultado.append("<td><a href='#' type='button' class='btn btn-outline-primary' onclick='visualizar(" + raiz.getId() + ")'><i class='fa-solid fa-eye'></i></a>");
-            resultado.append("<a href='#' type='button' class='btn btn-outline-success' data-bs-toggle='modal' data-bs-target='#editar' onclick=''><i class='fa-solid fa-pen-clip'></i></a>");
-resultado.append("<a href='#' type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#eliminar' onclick='modalEliminar(\"" + raiz.getNombre() + "\")'><i class='fa-solid fa-trash'></i></a></td>");
+            resultado.append("<a href='#' type='button' class='btn btn-outline-success' onclick='editar(" + raiz.getId() + ")'><i class='fa-solid fa-pen-clip'></i></a>");
+            resultado.append("<a href='#' type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#eliminar' onclick='modalEliminar(\"" + raiz.getNombre() + "\")'><i class='fa-solid fa-trash'></i></a></td>");
 
             resultado.append("</tr>");
 
@@ -100,6 +98,78 @@ resultado.append("<a href='#' type='button' class='btn btn-outline-danger' data-
         if (listaContacto != null && listaContacto.contactoRaiz != null) {
             // Recorre el árbol binario en orden (inorden)
             resultado.append(recorrerArbolVisualizar(listaContacto.contactoRaiz, id));
+        }
+        return resultado.toString();
+    }
+
+    public String Editar(Directorio listaContacto, int id) {
+        StringBuilder resultado = new StringBuilder();
+        if (listaContacto != null && listaContacto.contactoRaiz != null) {
+            // Recorre el árbol binario en orden (inorden)
+            resultado.append(recorrerArbolEditar(listaContacto.contactoRaiz, id));
+        }
+        return resultado.toString();
+    }
+
+    private String recorrerArbolEditar(Contacto raiz, int id) {
+        StringBuilder resultado = new StringBuilder();
+        if (raiz != null) {
+            // Recorre el subárbol izquierdo
+            resultado.append(recorrerArbolEditar(raiz.getIzq(), id));
+
+            // Agrega los detalles del contacto actual
+            if (raiz.getId() == id) {
+
+                resultado.append("<h2>Agregar contacto</h2>");
+                resultado.append("<hr>");
+                resultado.append("<div class=\"row\">");
+                resultado.append("<div class=\"col\">");
+                resultado.append("<div class=\"form-element\">");
+                resultado.append("<label for=\"nombre\">Nombre</label>");
+                resultado.append("<input type=\"text\" id=\"nombre\" name=\"nombre\" placeholder=\"Ingresa el nombre\" value=\"" + raiz.getNombre() + "\" maxlength=\"20\" required pattern=\"[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+\" title=\"No se permiten números\">");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("<div class=\"col\">");
+                resultado.append("<div class=\"form-element\">");
+                resultado.append("<label for=\"apellido\">Apellido</label>");
+                resultado.append("<input type=\"text\" id=\"apellido\" name=\"apellido\" placeholder=\"Ingresa el apellido\"  value=\"" + raiz.getApellido() + "\" maxlength=\"20\" required pattern=\"[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+\" title=\"No se permiten números\">");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("<div class=\"row\">");
+                resultado.append("<div class=\"col\">");
+                resultado.append("<div class=\"form-element\">");
+                resultado.append("<label for=\"celular\">Celular</label>");
+                resultado.append("<input type=\"text\" id=\"celular\" name=\"celular\" placeholder=\"Ingresa su número celular\" value=\"" + raiz.getCelular() + "\" maxlength=\"10\" required pattern=\"[0-9]+\" title=\"Solo se permiten números\">");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("<div class=\"col\">");
+                resultado.append("<div class=\"form-element\">");
+                resultado.append("<label for=\"direccion\">Dirección</label>");
+                resultado.append("<input type=\"text\" id=\"direccion\" name=\"direccion\" placeholder=\"Ingresa su dirección\" value=\"" + raiz.getDireccion() + "\" maxlength=\"40\" required>");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("<div class=\"row\">");
+                resultado.append("<div class=\"col\">");
+                resultado.append("<div class=\"form-element\">");
+                resultado.append("<label for=\"correo\">Correo electrónico</label>");
+                resultado.append("<input type=\"email\" id=\"correo\" name=\"correo\" placeholder=\"Ingresa el correo electrónico\" value=\"" + raiz.getEmail() + "\" maxlength=\"40\" required>");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("<div class=\"row\">");
+                resultado.append("<div class=\"col\">");
+                resultado.append("<div class=\"form-element\">");
+                resultado.append("<button type=\"submit\">Registrar</button>");
+                resultado.append("</div>");
+                resultado.append("</div>");
+                resultado.append("</div>");
+
+            }
+
+            // Recorre el subárbol derecho
+            resultado.append(recorrerArbolEditar(raiz.getDer(), id));
         }
         return resultado.toString();
     }
@@ -192,10 +262,9 @@ resultado.append("<a href='#' type='button' class='btn btn-outline-danger' data-
             contarUsuarios(raiz.getDer());
         }
     }
-    
-        public void eliminarContacto( String nombre )
-    {
-        contactoRaiz = contactoRaiz.eliminar( nombre );
+
+    public void eliminarContacto(String nombre) {
+        contactoRaiz = contactoRaiz.eliminar(nombre);
         numContactos--;
     }
 
@@ -253,7 +322,6 @@ resultado.append("<a href='#' type='button' class='btn btn-outline-danger' data-
 //        }
 //        return true;
 //    }
-
     public Contacto obtenerNodoReemplazo(Contacto nodoReemp) {
         Contacto reemplazarPadre = nodoReemp;
         Contacto reemplazo = nodoReemp;
