@@ -2,6 +2,7 @@
 <%@page import="Clases.Directorio"%>
 <!-- Inclución de la plantilla de header -->
 <%@include file= "templates/header.jsp" %>
+ 
 
 <style>
     <%@include file= "styles/index.css" %>
@@ -264,17 +265,34 @@
                 <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
                 <div class="form">
                     <div id="user-details">
-                    <h2>¿Seguro que quieres eliminar este contacto?</h2>
-                    <div class="form-element" style="display: flex; justify-content: space-between;">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right: 10px;">Cancelar</button>
-                        <button type="button" class="btn btn-danger" style="margin-left: 10px;" onclick="eliminar()">Eliminar</button>
-                    </div>
+                        <h2>¿Seguro que quieres eliminar este contacto?</h2>
+                        <div class="form-element" style="display: flex; justify-content: space-between;">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right: 10px;">Cancelar</button>
+                            <button type="button" class="btn btn-danger" style="margin-left: 10px;" onclick="eliminar()">Eliminar</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+    <div class="modal fade" id="editar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-size">
+            <div class="modal-content">
+                <div class="popup">
+                    <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
+                    <div class="form">
+                        <div id="user-edit">    
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 <!-- Bootstrap core JavaScript-->
@@ -295,52 +313,71 @@
 <script src="js/demo/datatables-demo.js"></script>
 
 <script>
-    function visualizar(codigo) {
-        var id = codigo;
-        $('#visualizar').modal('show');
 
-        $.ajax({
-            url: 'SvAgregarContacto?codigo=' + id,
-            method: 'GET', // Utiliza POST u otro método HTTP según corresponda
-            success: function (data) {
-                $('#user-details').html(data);
-            },
-            error: function () {
-                // En caso de error en la solicitud:
-                // Registra un mensaje de error en la consola (para fines de depuración)
-                console.log('Error al realizar la ordenación alfabética.');
-            }
-        });
-    }
+                            function editar(codigo) {
+                                var id = codigo;
+                                $('#editar').modal('show');
 
-var nombreEliminar;
+                                $.ajax({
+                                    url: 'SvEditar?codigo=' + id,
+                                    method: 'GET', // Utiliza POST u otro método HTTP según corresponda
+                                    success: function (data) {
+                                        $('#user-edit').html(data);
+                                    },
+                                    error: function () {
+                                        // En caso de error en la solicitud:
+                                        // Registra un mensaje de error en la consola (para fines de depuración)
+                                        console.log('Error al realizar la ordenación alfabética.');
+                                    }
+                                });
+                            }
 
-    function modalEliminar(id) {
-        $('#eliminar').modal('show');
+                            function visualizar(codigo) {
+                                var id = codigo;
+                                $('#visualizar').modal('show');
 
-nombreEliminar = id;
+                                $.ajax({
+                                    url: 'SvAgregarContacto?codigo=' + id,
+                                    method: 'GET', // Utiliza POST u otro método HTTP según corresponda
+                                    success: function (data) {
+                                        $('#user-details').html(data);
+                                    },
+                                    error: function () {
+                                        // En caso de error en la solicitud:
+                                        // Registra un mensaje de error en la consola (para fines de depuración)
+                                        console.log('Error al realizar la ordenación alfabética.');
+                                    }
+                                });
+                            }
 
-    }
+                            var nombreEliminar;
 
-        function eliminar() {
-        $('#eliminar').modal('hide');
-        var idEliminado = nombreEliminar;
-        $.ajax({
-            url: 'SvEliminar?id=' + idEliminado,
-            method: 'POST', // Utiliza POST u otro método HTTP según corresponda
-            success: function (data) {
-                location.reload();
-            },
-            error: function () {
-                // En caso de error en la solicitud:
-                // Registra un mensaje de error en la consola (para fines de depuración)
-                console.log('Error al realizar la ordenación alfabética.');
-            }
-        });
-    }
-    
- 
-     
+                            function modalEliminar(id) {
+                                $('#eliminar').modal('show');
+
+                                nombreEliminar = id;
+
+                            }
+
+                            function eliminar() {
+                                $('#eliminar').modal('hide');
+                                var idEliminado = nombreEliminar;
+                                $.ajax({
+                                    url: 'SvEliminar?id=' + idEliminado,
+                                    method: 'POST', // Utiliza POST u otro método HTTP según corresponda
+                                    success: function (data) {
+                                        location.reload();
+                                    },
+                                    error: function () {
+                                        // En caso de error en la solicitud:
+                                        // Registra un mensaje de error en la consola (para fines de depuración)
+                                        console.log('Error al realizar la ordenación alfabética.');
+                                    }
+                                });
+                            }
+
+
+
 </script>
 
 <!-- Inclución de la plantilla de footer -->

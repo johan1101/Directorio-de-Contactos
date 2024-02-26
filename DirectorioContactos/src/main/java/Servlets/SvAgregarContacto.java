@@ -109,7 +109,7 @@ public class SvAgregarContacto extends HttpServlet {
         String direccion = request.getParameter("direccion");
         String email = request.getParameter("correo");
 
-        int longitud = listaContactos.darPeso();
+        int longitud = listaContactos.encontrarIdMayor();
 
         longitud = longitud + 1;
 
