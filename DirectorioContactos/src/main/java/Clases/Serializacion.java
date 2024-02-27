@@ -27,7 +27,7 @@ public class Serializacion {
         File archivo = new File(rutaAbsoluta);
 
         try (FileOutputStream fos = new FileOutputStream(archivo); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            // Serializar y escribir la lista enlazada en el archivo
+            // Serializar y escribir el arbol binario en el archivo
             oos.writeObject(listaContactos);
         } catch (IOException e) {
             System.out.println("Error al escribir el archivo de datos.");
@@ -43,7 +43,7 @@ public class Serializacion {
 
         if (archivo.exists() && archivo.isFile()) {
             try (FileInputStream fis = new FileInputStream(archivo); ObjectInputStream ois = new ObjectInputStream(fis)) {
-                // Leer y deserializar la lista enlazada desde el archivo
+                // Leer y deserializar el arbol binario desde el archivo
                 listaContactos = (Directorio) ois.readObject();
             } catch (EOFException e) {
                 // EOFException indica que el archivo estaba vacío

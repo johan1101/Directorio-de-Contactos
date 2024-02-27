@@ -11,22 +11,34 @@ import javax.servlet.ServletContext;
 
 /**
  *
- * @author Johan Ordoñez
+ * @author Johan Ordoñez - Esneyder - Alejandro
  */
 public class Directorio implements Serializable {
 
     //------------------------------------------------------
     // Atributos
     //------------------------------------------------------
+    
     /**
      * Raiz del arbol de contactos presentes en el directorio
      */
     private Contacto contactoRaiz;
 
+    
+    /**
+     * Obtiene el contacto raíz del árbol.
+     *
+     * @return el contacto raíz del árbol
+     */
     public Contacto getContactoRaiz() {
         return contactoRaiz;
     }
 
+    /**
+     * Establece el contacto raíz del árbol.
+     *
+     * @param contactoRaiz el contacto raíz a establecer
+     */
     public void setContactoRaiz(Contacto contactoRaiz) {
         this.contactoRaiz = contactoRaiz;
     }
@@ -49,6 +61,18 @@ public class Directorio implements Serializable {
     // -----------------------------------------------------------------
     // M�todos
     // -----------------------------------------------------------------
+    
+    /**
+     * Agrega un nuevo contacto al árbol.
+     *
+     * @param id        el ID del contacto
+     * @param nombre    el nombre del contacto
+     * @param apellido  el apellido del contacto
+     * @param celular   el número de celular del contacto
+     * @param direccion la dirección del contacto
+     * @param email     el correo electrónico del contacto
+     * @throws ContactoRepetidoException si el contacto ya existe en el árbol
+     */
     public void agregarContacto(int id, String nombre, String apellido, String celular, String direccion, String email) throws ContactoRepetidoException {
         Contacto nuevoContacto = new Contacto(id, nombre, apellido, celular, direccion, email, null, null);
         if (contactoRaiz == null) {
@@ -59,7 +83,19 @@ public class Directorio implements Serializable {
         numContactos++;
     }
     
-        public String contactoRepetido(int id, String nombre, String apellido, String celular, String direccion, String email) throws ContactoRepetidoException {
+    /**
+     * Verifica si un contacto ya existe en el árbol.
+     *
+     * @param id        el ID del contacto
+     * @param nombre    el nombre del contacto
+     * @param apellido  el apellido del contacto
+     * @param celular   el número de celular del contacto
+     * @param direccion la dirección del contacto
+     * @param email     el correo electrónico del contacto
+     * @return "si" si el contacto está repetido, "no" si no está repetido
+     * @throws ContactoRepetidoException si ocurre un error al verificar la repetición del contacto
+     */
+    public String contactoRepetido(int id, String nombre, String apellido, String celular, String direccion, String email) throws ContactoRepetidoException {
         Contacto nuevoContacto = new Contacto(id, nombre, apellido, celular, direccion, email, null, null);
         if (contactoRaiz == null) {
             return "no";
@@ -69,14 +105,14 @@ public class Directorio implements Serializable {
     }
 
     /**
-     * Retorna el n�mero de contactos que est�n en el directorio
+     * Muestra el árbol de contactos en forma de tabla HTML.
      *
-     * @return n�mero de contactos presentes en el �rbol
+     * @param listaContacto el directorio de contactos
+     * @param context       el contexto del servlet
+     * @return una cadena que representa la tabla HTML del árbol de contactos
+     * @throws IOException            si ocurre un error de entrada o salida
+     * @throws ClassNotFoundException si no se encuentra la clase durante la deserialización
      */
-    public int darPeso() {
-        return contactoRaiz == null ? 0 : contactoRaiz.darPeso();
-    }
-
     public String mostrarArbol(Directorio listaContacto, ServletContext context) throws IOException, ClassNotFoundException {
         StringBuilder resultado = new StringBuilder();
         if (listaContacto != null && listaContacto.contactoRaiz != null) {
@@ -86,6 +122,16 @@ public class Directorio implements Serializable {
         return resultado.toString();
     }
 
+    
+    /**
+     * Recorre el árbol de contactos en orden (inorden) y genera una tabla HTML con los detalles de cada contacto.
+     *
+     * @param raiz    el nodo raíz del subárbol a recorrer
+     * @param context el contexto del servlet
+     * @return una cadena que representa una tabla HTML con los detalles de cada contacto
+     * @throws IOException            si ocurre un error de entrada o salida
+     * @throws ClassNotFoundException si no se encuentra la clase durante la deserialización
+     */
     private String recorrerArbol(Contacto raiz, ServletContext context) throws IOException, ClassNotFoundException {
         StringBuilder resultado = new StringBuilder();
         if (raiz != null) {
@@ -111,6 +157,13 @@ public class Directorio implements Serializable {
         return resultado.toString();
     }
 
+    /**
+     * Recorre el árbol de contactos para visualizar un contacto específico por su ID.
+     *
+     * @param listaContacto el directorio de contactos
+     * @param id            el ID del contacto a visualizar
+     * @return una cadena que representa los detalles del contacto solicitado
+     */
     public String Visualizar(Directorio listaContacto, int id) {
         StringBuilder resultado = new StringBuilder();
         if (listaContacto != null && listaContacto.contactoRaiz != null) {
@@ -120,87 +173,21 @@ public class Directorio implements Serializable {
         return resultado.toString();
     }
 
-    public String Editar(Directorio listaContacto, int id) {
-        StringBuilder resultado = new StringBuilder();
-        if (listaContacto != null && listaContacto.contactoRaiz != null) {
-            // Recorre el árbol binario en orden (inorden)
-            resultado.append(recorrerArbolEditar(listaContacto.contactoRaiz, id));
-        }
-        return resultado.toString();
-    }
-
-    private String recorrerArbolEditar(Contacto raiz, int id) {
-        StringBuilder resultado = new StringBuilder();
-        if (raiz != null) {
-            // Recorre el subárbol izquierdo
-            resultado.append(recorrerArbolEditar(raiz.getIzq(), id));
-
-            // Agrega los detalles del contacto actual
-            if (raiz.getId() == id) {
-
-                resultado.append("<h2>Agregar contacto</h2>");
-                resultado.append("<hr>");
-                resultado.append("<div class=\'row\'>");
-                resultado.append("<div class=\'col\'>");
-                resultado.append("<div class=\'form-element\'>");
-                resultado.append("<label for=\'nombre\'>Nombre</label>");
-                resultado.append("<input type=\'text\' id=\'nombre\' name=\'nombre\' placeholder=\'Ingresa el nombre\' value=\"' + raiz.getNombre() + '\" maxlength=\'20\' required pattern=\'[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+\' title=\'No se permiten números\'>");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("<div class=\"col\">");
-                resultado.append("<div class=\"form-element\">");
-                resultado.append("<label for=\"apellido\">Apellido</label>");
-                resultado.append("<input type=\"text\" id=\"apellido\" name=\"apellido\" placeholder=\"Ingresa el apellido\"  value=\"" + raiz.getApellido() + "\" maxlength=\"20\" required pattern=\"[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+\" title=\"No se permiten números\">");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("<div class=\"row\">");
-                resultado.append("<div class=\"col\">");
-                resultado.append("<div class=\"form-element\">");
-                resultado.append("<label for=\"celular\">Celular</label>");
-                resultado.append("<input type=\"text\" id=\"celular\" name=\"celular\" placeholder=\"Ingresa su número celular\" value=\"" + raiz.getCelular() + "\" maxlength=\"10\" required pattern=\"[0-9]+\" title=\"Solo se permiten números\">");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("<div class=\"col\">");
-                resultado.append("<div class=\"form-element\">");
-                resultado.append("<label for=\"direccion\">Dirección</label>");
-                resultado.append("<input type=\"text\" id=\"direccion\" name=\"direccion\" placeholder=\"Ingresa su dirección\" value=\"" + raiz.getDireccion() + "\" maxlength=\"40\" required>");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("<div class=\"row\">");
-                resultado.append("<div class=\"col\">");
-                resultado.append("<div class=\"form-element\">");
-                resultado.append("<label for=\"correo\">Correo electrónico</label>");
-                resultado.append("<input type=\"email\" id=\"correo\" name=\"correo\" placeholder=\"Ingresa el correo electrónico\" value=\"" + raiz.getEmail() + "\" maxlength=\"40\" required>");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("<div class=\"row\">");
-                resultado.append("<div class=\"col\">");
-                resultado.append("<div class=\"form-element\">");
-                resultado.append("<button type=\"submit\">Registrar</button>");
-                resultado.append("</div>");
-                resultado.append("</div>");
-                resultado.append("</div>");
-
-            }
-
-            // Recorre el subárbol derecho
-            resultado.append(recorrerArbolEditar(raiz.getDer(), id));
-        }
-        return resultado.toString();
-    }
-
+     /**
+     * Recorre el árbol de contactos para visualizar un contacto específico por su ID, generando una vista con los detalles del contacto.
+     *
+     * @param raiz el nodo raíz del subárbol a recorrer
+     * @param id   el ID del contacto a visualizar
+     * @return una cadena que representa una vista HTML con los detalles del contacto solicitado
+     */
     private String recorrerArbolVisualizar(Contacto raiz, int id) {
         StringBuilder resultado = new StringBuilder();
         if (raiz != null) {
             // Recorre el subárbol izquierdo
             resultado.append(recorrerArbolVisualizar(raiz.getIzq(), id));
 
-            // Agrega los detalles del contacto actual
+            // Agrega los detalles del contacto actual si coincide con el ID proporcionado
             if (raiz.getId() == id) {
-
                 resultado.append("<h2>Información del contacto</h2>");
                 resultado.append("<hr>");
                 resultado.append("<div class=\"row\">");
@@ -249,7 +236,6 @@ public class Directorio implements Serializable {
                 resultado.append("</div>");
                 resultado.append("</div>");
                 resultado.append("</div>");
-
             }
 
             // Recorre el subárbol derecho
@@ -260,15 +246,22 @@ public class Directorio implements Serializable {
 
     private int contadorUsuarios; // Variable para contar usuarios
 
-    // Constructor y otros métodos de la clase
-    // Método para recorrer el árbol binario y contar usuarios
+    /**
+     * Recorre el árbol binario de contactos y cuenta la cantidad de usuarios.
+     *
+     * @return el número total de usuarios encontrados en el árbol
+     */
     public int contarUsuarios() {
         contadorUsuarios = 0; // Inicializar el contador
         contarUsuarios(contactoRaiz); // Llamar al método auxiliar para iniciar el recorrido
         return contadorUsuarios; // Devolver el total de usuarios encontrados
     }
 
-    // Método auxiliar recursivo para recorrer el árbol binario y contar usuarios
+    /**
+     * Método auxiliar recursivo para recorrer el árbol binario y contar usuarios.
+     *
+     * @param raiz el nodo raíz del subárbol a recorrer
+     */
     private void contarUsuarios(Contacto raiz) {
         if (raiz != null) {
             // Si el nodo actual no es nulo, es un usuario
@@ -281,65 +274,22 @@ public class Directorio implements Serializable {
         }
     }
 
+    /**
+     * Elimina un contacto del árbol binario por su nombre y actualiza el número total de contactos.
+     *
+     * @param nombre el nombre del contacto a eliminar
+     */
     public void eliminarContacto(String nombre) {
         contactoRaiz = contactoRaiz.eliminar(nombre);
         numContactos--;
     }
 
-//    public boolean eliminar(int id) {
-//        Contacto auxiliar = contactoRaiz;
-//        Contacto padre = contactoRaiz;
-//        boolean esHijoIzq = true;
-//        while (auxiliar.getId() != id) {
-//            padre = auxiliar;
-//            if (id < auxiliar.getId()) {
-//                esHijoIzq = true;
-//                auxiliar = auxiliar.getIzq();
-//            } else {
-//                esHijoIzq = false;
-//                auxiliar = auxiliar.getDer();
-//            }
-//            if (auxiliar == null) {
-//                return false;
-//            }
-//        }
-//        if (auxiliar.getIzq() == null && auxiliar.getDer() == null) {
-//            if (auxiliar == contactoRaiz) {
-//                contactoRaiz = null;
-//            } else if (esHijoIzq) {
-//                padre.setDer(null);
-//            } else {
-//                padre.setDer(null);
-//            }
-//        } else if (auxiliar.getDer() == null) {
-//            if (auxiliar == contactoRaiz) {
-//                contactoRaiz = auxiliar.getIzq();
-//            } else if (esHijoIzq) {
-//                padre.setIzq(auxiliar.getIzq());
-//            } else {
-//                padre.setDer(auxiliar.getIzq());
-//            }
-//        } else if (auxiliar.getIzq() == null) {
-//            if (auxiliar == contactoRaiz) {
-//                contactoRaiz = auxiliar.getDer();
-//            } else if (esHijoIzq) {
-//                padre.setIzq(auxiliar.getDer());
-//            } else {
-//                padre.setDer(auxiliar.getIzq());
-//            }
-//        } else {
-//            Contacto reemplazo = obtenerNodoReemplazo(auxiliar);
-//            if (auxiliar == contactoRaiz) {
-//                contactoRaiz = reemplazo;
-//            } else if (esHijoIzq) {
-//                padre.setIzq(reemplazo);
-//            } else {
-//                padre.setDer(reemplazo);
-//            }
-//            reemplazo.setIzq(auxiliar.getIzq());
-//        }
-//        return true;
-//    }
+     /**
+     * Obtiene el nodo de reemplazo para eliminar un nodo del árbol binario.
+     *
+     * @param nodoReemp el nodo que se eliminará
+     * @return el nodo de reemplazo para el nodo que se eliminará
+     */
     public Contacto obtenerNodoReemplazo(Contacto nodoReemp) {
         Contacto reemplazarPadre = nodoReemp;
         Contacto reemplazo = nodoReemp;
@@ -356,26 +306,38 @@ public class Directorio implements Serializable {
         return reemplazo;
     }
 
-public int encontrarIdMayor() {
-    if (contactoRaiz == null) {
-        // Si el árbol está vacío, retorna un valor que indique que no hay ningún ID
-        return 0;
-    } else {
-        // Llama a un método auxiliar para encontrar el ID mayor comenzando desde la raíz
-        return encontrarIdMayor(contactoRaiz, contactoRaiz.getId());
-    }
-}
-
-private int encontrarIdMayor(Contacto nodo, int maximoActual) {
-    if (nodo != null) {
-        // Verifica si el ID de este nodo es mayor que el máximo actual
-        if (nodo.getId() > maximoActual) {
-            maximoActual = nodo.getId();
+    /**
+     * Encuentra el ID más grande presente en el árbol binario de contactos.
+     *
+     * @return el ID más grande encontrado, o 0 si el árbol está vacío
+     */
+    public int encontrarIdMayor() {
+        if (contactoRaiz == null) {
+            // Si el árbol está vacío, retorna un valor que indique que no hay ningún ID
+            return 0;
+        } else {
+            // Llama a un método auxiliar para encontrar el ID mayor comenzando desde la raíz
+            return encontrarIdMayor(contactoRaiz, contactoRaiz.getId());
         }
-        // Llama recursivamente a la función para los hijos izquierdos y derechos
-        maximoActual = encontrarIdMayor(nodo.getIzq(), maximoActual);
-        maximoActual = encontrarIdMayor(nodo.getDer(), maximoActual);
     }
-    return maximoActual;
-}
+
+    /**
+     * Método auxiliar recursivo para encontrar el ID más grande en el árbol binario de contactos.
+     *
+     * @param nodo el nodo actual que se está evaluando
+     * @param maximoActual el valor máximo actual encontrado hasta este punto
+     * @return el ID más grande encontrado
+     */
+    private int encontrarIdMayor(Contacto nodo, int maximoActual) {
+        if (nodo != null) {
+            // Verifica si el ID de este nodo es mayor que el máximo actual
+            if (nodo.getId() > maximoActual) {
+                maximoActual = nodo.getId();
+            }
+            // Llama recursivamente a la función para los hijos izquierdos y derechos
+            maximoActual = encontrarIdMayor(nodo.getIzq(), maximoActual);
+            maximoActual = encontrarIdMayor(nodo.getDer(), maximoActual);
+        }
+        return maximoActual;
+    }
 }

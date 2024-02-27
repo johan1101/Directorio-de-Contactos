@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Johan Ordoñez
+ * @author Johan Ordoñez - Esneyder - Alejandro
  */
 @WebServlet(name = "SvEliminar", urlPatterns = {"/SvEliminar"})
 public class SvEliminar extends HttpServlet {
@@ -44,37 +44,45 @@ public class SvEliminar extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        System.out.println("Corriendo metodo para eliminar un contacto");
 
-        String id = request.getParameter("id");
-        if (id != null) {
-    // Elimina los símbolos y las tildes
-    id = id.replaceAll("[^\\p{ASCII}]", "");
-}
-        
-        System.out.println(id);
+     // Se imprime un mensaje en la consola para indicar que se está ejecutando el método para eliminar un contacto
+     System.out.println("Corriendo método para eliminar un contacto");
 
-        // Obtener el contexto del servlet
-        ServletContext context = getServletContext();
-        
-        try {
-            listaContactos = Serializacion.leerArchivoContactos(context);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SvEliminar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        listaContactos.eliminarContacto(id);
-        
-        Serializacion.escribirArchivoContactos(listaContactos, context);
-        
-            // Obtener la sesión y invalidarla para eliminar todas las variables de sesión
-    HttpSession session = request.getSession(false);
-    if (session != null) {
-        session.invalidate();
-    }
-        
-        response.sendRedirect("index.jsp");
+     // Se obtiene el parámetro "id" del formulario de la solicitud POST, que contiene el ID del contacto a eliminar
+     String id = request.getParameter("id");
+     // Si el ID no es nulo, se eliminan los símbolos y las tildes del ID para un procesamiento limpio
+     if (id != null) {
+         id = id.replaceAll("[^\\p{ASCII}]", "");
+     }
 
+     // Se imprime el ID del contacto a eliminar en la consola (para propósitos de depuración)
+     System.out.println(id);
+
+     // Obtener el contexto del servlet
+     ServletContext context = getServletContext();
+
+     try {
+         // Se intenta leer los contactos del archivo utilizando la clase Serializacion y se asigna a la lista de contactos
+         listaContactos = Serializacion.leerArchivoContactos(context);
+     } catch (ClassNotFoundException ex) {
+         // Si ocurre una excepción de ClassNotFoundException al leer los contactos, se registra el error en la consola
+         Logger.getLogger(SvEliminar.class.getName()).log(Level.SEVERE, null, ex);
+     }
+
+     // Se elimina el contacto con el ID especificado de la lista de contactos
+     listaContactos.eliminarContacto(id);
+
+     // Se escriben los contactos actualizados en el archivo utilizando la clase Serializacion
+     Serializacion.escribirArchivoContactos(listaContactos, context);
+
+     // Se obtiene la sesión y se invalida para eliminar todas las variables de sesión
+     HttpSession session = request.getSession(false);
+     if (session != null) {
+         session.invalidate();
+     }
+
+     // Se redirige a la página index.jsp después de eliminar el contacto
+     response.sendRedirect("index.jsp");
     }
 
 }

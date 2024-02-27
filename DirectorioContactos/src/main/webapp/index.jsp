@@ -9,71 +9,71 @@
 </style>
 
 <%
-    //Creamos una lista
+    // Creamos una instancia de la clase Directorio para almacenar la lista de contactos
     Directorio listaContactos = new Directorio();
 
     // Obtener el contexto del servlet
     ServletContext context = getServletContext();
 
-    //Llenamos la lista con el .ser
+    // Llenamos la lista de contactos con los datos almacenados en el archivo .ser
     listaContactos = Serializacion.leerArchivoContactos(context);
 
-    //Generamos la tabla
+    // Generamos una tabla HTML que muestra la lista de contactos
     String tablaHTML = listaContactos.mostrarArbol(listaContactos, context);
 
-%>
+    // Obtener el valor almacenado en la sesión con la clave "repetido"
+    String valor = (String) session.getAttribute("repetido");
 
-<%
+    // Variable para almacenar el valor repetidoParam
+    String repetidoParam = "";
 
-// Obtener el valor almacenado en la sesión
-String valor = (String) session.getAttribute("repetido");
-
-String repetidoParam = "";
-
-if(valor == null){
-    valor = "otro";
-    repetidoParam = valor;
-    }else{
-    repetidoParam = valor;
-    session.removeAttribute("nombreVariable");
+    // Si el valor obtenido de la sesión es nulo, se asigna "otro" a repetidoParam
+    // y se actualiza el valor de repetidoParam en la sesión
+    if (valor == null) {
+        valor = "otro";
+        repetidoParam = valor;
+    } else {
+        // Si el valor no es nulo, se asigna el valor de la sesión a repetidoParam
+        // y se elimina el atributo de sesión "nombreVariable"
+        repetidoParam = valor;
+        session.removeAttribute("nombreVariable");
     }
 
+    // Verificar si repetidoParam es nulo o diferente de "si" y "no"
+    if (repetidoParam == null || (!repetidoParam.equals("si") && !repetidoParam.equals("no"))) {
+        repetidoParam = "otro";
+    }
 
-
-
-    
-// Verificar si repetidoParam es nulo o diferente de "si" y "no"
-if (repetidoParam == null || (!repetidoParam.equals("si") && !repetidoParam.equals("no"))) {
-    repetidoParam = "otro";
-}
-    
+    // Imprimir el valor de repetidoParam en la consola del servidor
     System.out.println(repetidoParam);
-   
-    //En caso de que si se registra exitosamente
-    if (repetidoParam != null && repetidoParam.equals("si")) {
 
+    // En caso de que se registre exitosamente
+    if (repetidoParam != null && repetidoParam.equals("si")) {
 %>
-<!--Llama metodo de JS para mostrar la modal de registrado existosamente-->
+<!-- Llama a un método de JavaScript para mostrar una modal de registro exitoso -->
 <script>
     $(document).ready(function () {
         usuarioNoR();
     });
 </script>
-<%    } //En caso de que no se registra exitosamente
-else if (repetidoParam != null && repetidoParam.equals("no")) {
+<%
+    } // En caso de que no se registre exitosamente
+    else if (repetidoParam != null && repetidoParam.equals("no")) {
 %>
-<!--Llama metodo de JS para mostrar la modal de NO registrado existosamente-->
+<!-- Llama a un método de JavaScript para mostrar una modal de registro no exitoso -->
 <script>
     $(document).ready(function () {
         usuarioR();
     });
 </script>
-<%  }
+<%
+    }
 
-repetidoParam = "otro";
+    // Asigna el valor "otro" a repetidoParam
+    repetidoParam = "otro";
 
-// Eliminar el atributo de solicitud
-request.removeAttribute("repetido");
+    // Elimina el atributo de solicitud "repetido"
+    request.removeAttribute("repetido");
 %>
 
 <!-- Page Wrapper -->
@@ -123,8 +123,6 @@ request.removeAttribute("repetido");
                     </button>
                 </form>
 
-
-
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
 
@@ -152,15 +150,13 @@ request.removeAttribute("repetido");
                         </div>
                     </li>
 
-
-
                     <div class="topbar-divider d-none d-sm-block"></div>
 
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-3 d-none d-lg-inline text-gray-600 small ">Douglas McGee</span>
+                            <span class="mr-3 d-none d-lg-inline text-gray-600 small ">Usuario</span>
                             <img class="img-profile rounded-circle"
                                  src="img/user3.jpg">
                         </a>
@@ -367,96 +363,68 @@ request.removeAttribute("repetido");
 
 <script>
 
-                            function editar(codigo) {
-                                var id = codigo;
-                                $('#editar').modal('show');
+    // Función para abrir el modal de edición y realizar una solicitud AJAX para obtener los detalles del usuario a editar
+    function editar(codigo) {
+        var id = codigo;
+        $('#editar').modal('show'); // Mostrar el modal de edición
 
-                                $.ajax({
-                                    url: 'SvEditar?codigo=' + id,
-                                    method: 'GET', // Utiliza POST u otro método HTTP según corresponda
-                                    success: function (data) {
-                                        $('#user-edit').html(data);
-                                    },
-                                    error: function () {
-                                        // En caso de error en la solicitud:
-                                        // Registra un mensaje de error en la consola (para fines de depuración)
-                                        console.log('Error al realizar la ordenación alfabética.');
-                                    }
-                                });
-                            }
-
-                            function visualizar(codigo) {
-                                var id = codigo;
-                                $('#visualizar').modal('show');
-
-                                $.ajax({
-                                    url: 'SvAgregarContacto?codigo=' + id,
-                                    method: 'GET', // Utiliza POST u otro método HTTP según corresponda
-                                    success: function (data) {
-                                        $('#user-details').html(data);
-                                    },
-                                    error: function () {
-                                        // En caso de error en la solicitud:
-                                        // Registra un mensaje de error en la consola (para fines de depuración)
-                                        console.log('Error al realizar la ordenación alfabética.');
-                                    }
-                                });
-                            }
-
-                            var nombreEliminar;
-
-                            function modalEliminar(id) {
-                                $('#eliminar').modal('show');
-
-                                nombreEliminar = id;
-
-                            }
-
-                            function eliminar() {
-                                $('#eliminar').modal('hide');
-                                var idEliminado = nombreEliminar;
-                                $.ajax({
-                                    url: 'SvEliminar?id=' + idEliminado,
-                                    method: 'POST', // Utiliza POST u otro método HTTP según corresponda
-                                    success: function (data) {
-                                        location.reload();
-                                    },
-                                    error: function () {
-                                        // En caso de error en la solicitud:
-                                        // Registra un mensaje de error en la consola (para fines de depuración)
-                                        console.log('Error al realizar la ordenación alfabética.');
-                                    }
-                                });
-                            }
-                            
-                             //TOASTR registro NO exitoso
-    function usuarioNoR() {
-        // Configurar opciones Toastr
-        toastr.options = {
-            "closeButton": false,
-            "debug": false,
-            "newestOnTop": false,
-            "progressBar": false,
-              "positionClass": "toast-top-center",
-            "preventDuplicates": false,
-            "onclick": null,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        };
-
-        // Mostrar una notificación Toastr de error
-        toastr.error('Ya existe un usuario registrado con esa cedula', 'Error');
+        // Realizar una solicitud AJAX para obtener los detalles del usuario a editar
+        $.ajax({
+            url: 'SvEditar?codigo=' + id, // URL del servlet que maneja la solicitud de edición
+            method: 'GET', // Método HTTP utilizado (en este caso, GET)
+            success: function (data) {
+                $('#user-edit').html(data); // Mostrar los detalles del usuario en el modal de edición
+            },
+            error: function () {
+                console.log('Error al realizar la solicitud de edición.'); // Registrar un mensaje de error en la consola en caso de error
+            }
+        });
     }
 
+    // Función para abrir el modal de visualización y realizar una solicitud AJAX para obtener los detalles del usuario
+    function visualizar(codigo) {
+        var id = codigo;
+        $('#visualizar').modal('show'); // Mostrar el modal de visualización
 
-    //TOASTR registro exitoso
-    function usuarioR() {
+        // Realizar una solicitud AJAX para obtener los detalles del usuario
+        $.ajax({
+            url: 'SvAgregarContacto?codigo=' + id, // URL del servlet que maneja la solicitud de visualización
+            method: 'GET', // Método HTTP utilizado (en este caso, GET)
+            success: function (data) {
+                $('#user-details').html(data); // Mostrar los detalles del usuario en el modal de visualización
+            },
+            error: function () {
+                console.log('Error al realizar la solicitud de visualización.'); // Registrar un mensaje de error en la consola en caso de error
+            }
+        });
+    }
+
+    // Función para mostrar el modal de confirmación de eliminación y almacenar el nombre del usuario a eliminar
+    var nombreEliminar;
+    function modalEliminar(id) {
+        $('#eliminar').modal('show'); // Mostrar el modal de confirmación de eliminación
+        nombreEliminar = id; // Almacenar el nombre del usuario a eliminar
+    }
+
+    // Función para eliminar un usuario mediante una solicitud AJAX
+    function eliminar() {
+        $('#eliminar').modal('hide'); // Ocultar el modal de confirmación de eliminación
+        var idEliminado = nombreEliminar; // Obtener el nombre del usuario a eliminar
+        $.ajax({
+            url: 'SvEliminar?id=' + idEliminado, // URL del servlet que maneja la solicitud de eliminación
+            method: 'POST', // Método HTTP utilizado (en este caso, POST)
+            success: function (data) {
+                location.reload(); // Recargar la página después de la eliminación exitosa del usuario
+            },
+            error: function () {
+                console.log('Error al realizar la solicitud de eliminación.'); // Registrar un mensaje de error en la consola en caso de error
+            }
+        });
+    }
+
+    // Función para mostrar una notificación Toastr de error cuando el registro no fue exitoso
+    function usuarioNoR() {
+        // Configurar opciones Toastr
         toastr.options = {
             "closeButton": false,
             "debug": false,
@@ -475,11 +443,34 @@ request.removeAttribute("repetido");
             "hideMethod": "fadeOut"
         };
 
-        // Mostrar una notificación Toastr 
-        toastr.success('Se ha registrado exitosamente!', 'Registrado');
+        // Mostrar una notificación Toastr de error
+        toastr.error('Ya existe un contacto registrado con ese nombre', 'Error');
     }
 
+    // Función para mostrar una notificación Toastr de éxito cuando el registro fue exitoso
+    function usuarioR() {
+        // Configurar opciones Toastr
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
 
+        // Mostrar una notificación Toastr de éxito
+        toastr.success('Se ha registrado exitosamente!', 'Registrado');
+    }
 </script>
 
 <!-- Inclución de la plantilla de footer -->
