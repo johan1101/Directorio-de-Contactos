@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -65,6 +66,12 @@ public class SvEliminar extends HttpServlet {
         listaContactos.eliminarContacto(id);
         
         Serializacion.escribirArchivoContactos(listaContactos, context);
+        
+            // Obtener la sesión y invalidarla para eliminar todas las variables de sesión
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+        session.invalidate();
+    }
         
         response.sendRedirect("index.jsp");
 

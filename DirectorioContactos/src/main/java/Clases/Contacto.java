@@ -91,10 +91,14 @@ public class Contacto implements Comparable, Serializable {
         return nombre.compareToIgnoreCase(otro.nombre);
     }
 
+    public int compareToC(Object o) {
+        Contacto otro = (Contacto) o;
+        return nombre.compareToIgnoreCase(otro.nombre);
+    }
+
     // -----------------------------------------------------------------
     // Metodos
     // -----------------------------------------------------------------
-
     public int getId() {
         return id;
     }
@@ -158,150 +162,128 @@ public class Contacto implements Comparable, Serializable {
     public void setDer(Contacto der) {
         this.der = der;
     }
-    
-      /**
+
+    /**
      * Indica si este nodo es una hoja
+     *
      * @return true si este nodo es una hoja y false en caso contrario
      */
-    public boolean esHoja( )
-    {
+    public boolean esHoja() {
         return izq == null && der == null;
     }
+
+    public void insertar(Contacto nuevo) throws ContactoRepetidoException {
+        if (compareTo(nuevo) == 0) {
+
+        } else if (compareTo(nuevo) > 0) {
+            // Agregar el nuevo contacto en el subárbol izquierdo
+            if (izq == null) {
+                izq = nuevo;
+            } else {
+                izq.insertar(nuevo);
+            }
+        } else {
+            // Agregar el nuevo contacto en el subárbol derecho
+            if (der == null) {
+                der = nuevo;
+            } else {
+                der.insertar(nuevo);
+            }
+        }
+    }
     
-public void insertar(Contacto nuevo) throws ContactoRepetidoException {
-    if (compareTo(nuevo) == 0) {
-        throw new ContactoRepetidoException(nuevo.nombre);
-    } else if (compareTo(nuevo) > 0) {
-        // Agregar el nuevo contacto en el subárbol izquierdo
-        if (izq == null) {
-            izq = nuevo;
-        } else {
-            izq.insertar(nuevo);
-        }
+public String contactoR(Contacto nuevo) throws ContactoRepetidoException {
+    int comparacion = compareToC(nuevo);
+    
+    if (comparacion == 0) {
+        return "si"; // El contacto ya existe en el árbol
+    } else if (comparacion > 0 && izq != null) {
+        // Si la comparación es mayor que cero y el subárbol izquierdo no es nulo,
+        // llamar recursivamente al método en el subárbol izquierdo
+        return izq.contactoR(nuevo);
+    } else if (comparacion < 0 && der != null) {
+        // Si la comparación es menor que cero y el subárbol derecho no es nulo,
+        // llamar recursivamente al método en el subárbol derecho
+        return der.contactoR(nuevo);
     } else {
-        // Agregar el nuevo contacto en el subárbol derecho
-        if (der == null) {
-            der = nuevo;
-        } else {
-            der.insertar(nuevo);
-        }
+        return "no"; // No se encontró el contacto en el árbol
     }
 }
-    
-        /**
-     * Retorna el n�mero de contactos que hay en el �rbol que comienza en este nodo utilizando un algoritmo iterativo
-     * @return n�mero de contactos en el �rbol que comienza en este nodo
-     */
-    public int darPesoIterativo( )
-    {
-        int peso = 0;
-        ArrayList pila = new ArrayList( );
-        Contacto p = this;
-        while( p != null )
-        {
-            peso++;
-            if( p.izq != null )
-            {
-                // Guarda el sub�rbol derecho en la pila, para recuperarlo m�s tarde
-                if( p.der != null )
-                    pila.add( p.der );
 
-                // Baja por la izquierda
-                p = p.izq;
-            }
-            else if( p.der != null )
-            {
-                // Baja por la derecha, puesto que no hay sub�rbol izquierdo
-                p = p.der;
-            }
-            else if( pila.size( ) != 0 )
-            {
-                // Es una hoja, luego debemos sacar de la pila el �ltimo sub�rbol all� almacenado
-                p = ( Contacto )pila.get( 0 );
-                pila.remove( 0 );
-            }
-            else
-            {
-                p = null;
-            }
-        }
-        return peso;
-    }
-    
-        /**
-     * Retorna el n�mero de contactos que hay en el �rbol que comienza en este nodo
+    /**
+     * Retorna el n�mero de contactos que hay en el �rbol que comienza en este
+     * nodo
+     *
      * @return n�mero de contactos en el �rbol que comienza en este nodo
      */
-    public int darPeso( )
-    {
-        int p1 = ( izq == null ) ? 0 : izq.darPeso( );
-        int p2 = ( der == null ) ? 0 : der.darPeso( );
+    public int darPeso() {
+        int p1 = (izq == null) ? 0 : izq.darPeso();
+        int p2 = (der == null) ? 0 : der.darPeso();
         return 1 + p1 + p2;
     }
-        
-        /**
-     * Retorna el contacto que alfab�ticamente corresponde al menor contacto del �rbol que parte de este nodo
+
+    /**
+     * Retorna el contacto que alfab�ticamente corresponde al menor contacto del
+     * �rbol que parte de este nodo
+     *
      * @return contacto con menor nombre
      */
-    public Contacto darMenor( )
-    {
-        return ( izq == null ) ? this : izq.darMenor( );
+    public Contacto darMenor() {
+        return (izq == null) ? this : izq.darMenor();
     }
-    
-        /**
-     * Retorna el contacto que alfab�ticamente corresponde al mayor contacto del �rbol que parte de este nodo
+
+    /**
+     * Retorna el contacto que alfab�ticamente corresponde al mayor contacto del
+     * �rbol que parte de este nodo
+     *
      * @return contacto con mayor nombre
      */
-    public Contacto darMayor( )
-    {
-        return ( der == null ) ? this : der.darMayor( );
+    public Contacto darMayor() {
+        return (der == null) ? this : der.darMayor();
     }
-    
-public Contacto eliminar(String unNombre) {
-    Collator collator = Collator.getInstance(new Locale("es", "ES"));
 
-    // Compara los nombres de manera sensible a la localización
+    public Contacto eliminar(String unNombre) {
+        Collator collator = Collator.getInstance(new Locale("es", "ES"));
 
-    // Elimina los símbolos y las tildes
-    nombre = nombre.replaceAll("[^\\p{ASCII}]", "");
+        // Compara los nombres de manera sensible a la localización
+        // Elimina los símbolos y las tildes
+        nombre = nombre.replaceAll("[^\\p{ASCII}]", "");
 
-    int comparacion = collator.compare(nombre, unNombre);
+        int comparacion = collator.compare(nombre, unNombre);
 
-    if (comparacion == 0) {
-        // Si la raíz coincide con el nombre a eliminar
-        if (izq == null) {
-            // Si el hijo izquierdo es nulo, devuelve el hijo derecho como nueva raíz
-            return der;
-        } else if (der == null) {
-            // Si el hijo derecho es nulo, devuelve el hijo izquierdo como nueva raíz
-            return izq;
+        if (comparacion == 0) {
+            // Si la raíz coincide con el nombre a eliminar
+            if (izq == null) {
+                // Si el hijo izquierdo es nulo, devuelve el hijo derecho como nueva raíz
+                return der;
+            } else if (der == null) {
+                // Si el hijo derecho es nulo, devuelve el hijo izquierdo como nueva raíz
+                return izq;
+            } else {
+                // Si la raíz tiene ambos hijos, encuentra el sucesor en el subárbol derecho
+                Contacto sucesor = der.darMenor();
+                // Actualiza los datos de la raíz con los del sucesor
+                nombre = sucesor.getNombre();
+                apellido = sucesor.getApellido();
+                celular = sucesor.getCelular();
+                direccion = sucesor.getDireccion();
+                email = sucesor.getEmail();
+                // Elimina el sucesor del subárbol derecho
+                der = der.eliminar(sucesor.getNombre());
+                return this;
+            }
+        } else if (comparacion > 0) {
+            // Si el nombre a eliminar es menor que el nombre de la raíz, busca en el subárbol izquierdo
+            if (izq != null) {
+                izq = izq.eliminar(unNombre);
+            }
         } else {
-            // Si la raíz tiene ambos hijos, encuentra el sucesor en el subárbol derecho
-            Contacto sucesor = der.darMenor();
-            // Actualiza los datos de la raíz con los del sucesor
-            nombre = sucesor.getNombre();
-            apellido = sucesor.getApellido();
-            celular = sucesor.getCelular();
-            direccion = sucesor.getDireccion();
-            email = sucesor.getEmail();
-            // Elimina el sucesor del subárbol derecho
-            der = der.eliminar(sucesor.getNombre());
-            return this;
+            // Si el nombre a eliminar es mayor que el nombre de la raíz, busca en el subárbol derecho
+            if (der != null) {
+                der = der.eliminar(unNombre);
+            }
         }
-    } else if (comparacion > 0) {
-        // Si el nombre a eliminar es menor que el nombre de la raíz, busca en el subárbol izquierdo
-        if (izq != null) {
-            izq = izq.eliminar(unNombre);
-        }
-    } else {
-        // Si el nombre a eliminar es mayor que el nombre de la raíz, busca en el subárbol derecho
-        if (der != null) {
-            der = der.eliminar(unNombre);
-        }
+        return this;
     }
-    return this;
-}
 
-
-    
 }

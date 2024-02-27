@@ -58,6 +58,15 @@ public class Directorio implements Serializable {
         }
         numContactos++;
     }
+    
+        public String contactoRepetido(int id, String nombre, String apellido, String celular, String direccion, String email) throws ContactoRepetidoException {
+        Contacto nuevoContacto = new Contacto(id, nombre, apellido, celular, direccion, email, null, null);
+        if (contactoRaiz == null) {
+            return "no";
+        } else {
+            return contactoRaiz.contactoR(nuevoContacto);
+        }
+    }
 
     /**
      * Retorna el n�mero de contactos que est�n en el directorio

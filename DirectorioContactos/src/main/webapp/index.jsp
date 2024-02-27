@@ -23,6 +23,59 @@
 
 %>
 
+<%
+
+// Obtener el valor almacenado en la sesión
+String valor = (String) session.getAttribute("repetido");
+
+String repetidoParam = "";
+
+if(valor == null){
+    valor = "otro";
+    repetidoParam = valor;
+    }else{
+    repetidoParam = valor;
+    session.removeAttribute("nombreVariable");
+    }
+
+
+
+
+    
+// Verificar si repetidoParam es nulo o diferente de "si" y "no"
+if (repetidoParam == null || (!repetidoParam.equals("si") && !repetidoParam.equals("no"))) {
+    repetidoParam = "otro";
+}
+    
+    System.out.println(repetidoParam);
+   
+    //En caso de que si se registra exitosamente
+    if (repetidoParam != null && repetidoParam.equals("si")) {
+
+%>
+<!--Llama metodo de JS para mostrar la modal de registrado existosamente-->
+<script>
+    $(document).ready(function () {
+        usuarioNoR();
+    });
+</script>
+<%    } //En caso de que no se registra exitosamente
+else if (repetidoParam != null && repetidoParam.equals("no")) {
+%>
+<!--Llama metodo de JS para mostrar la modal de NO registrado existosamente-->
+<script>
+    $(document).ready(function () {
+        usuarioR();
+    });
+</script>
+<%  }
+
+repetidoParam = "otro";
+
+// Eliminar el atributo de solicitud
+request.removeAttribute("repetido");
+%>
+
 <!-- Page Wrapper -->
 <div id="wrapper">
     <!-- Sidebar -->
@@ -107,7 +160,7 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-3 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                            <span class="mr-3 d-none d-lg-inline text-gray-600 small ">Douglas McGee</span>
                             <img class="img-profile rounded-circle"
                                  src="img/user3.jpg">
                         </a>
@@ -375,7 +428,56 @@
                                     }
                                 });
                             }
+                            
+                             //TOASTR registro NO exitoso
+    function usuarioNoR() {
+        // Configurar opciones Toastr
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+              "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
 
+        // Mostrar una notificación Toastr de error
+        toastr.error('Ya existe un usuario registrado con esa cedula', 'Error');
+    }
+
+
+    //TOASTR registro exitoso
+    function usuarioR() {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Mostrar una notificación Toastr 
+        toastr.success('Se ha registrado exitosamente!', 'Registrado');
+    }
 
 
 </script>
